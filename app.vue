@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {useNuxtApp} from "#app";
-import {ulid, decodeTime} from 'ulid'
-import {Ref, ref, watch} from "vue";
+import {ulid} from 'ulid'
+import {Ref, ref} from "vue";
 
 const { $dayjs } = useNuxtApp();
 const _ulid: Ref<string> = ref('')
@@ -22,11 +22,10 @@ const setCurrentTime = () => {
   _datetime.value = $dayjs.unix(now).format('YYYY-MM-DD HH:mm:ss')
 }
 
-const setUlidList = () => {
-  for (let i = 0; i < 10; i++) {
-    const now = new Date()
-    const ts = Math.floor(now.getTime() / 1000)
-    _ulidList.value.push(ulid(ts))
+const setUlidList = (len: number) => {
+  for (let i = 0; i < len; i++) {
+    const now = getCurrentUnixTime()
+    _ulidList.value.push(ulid(now))
   }
 }
 
@@ -65,7 +64,7 @@ setCurrentTime()
       <div class="mt-8 flex flex-row justify-center items-center w-full">
         <button class="p-2 mr-4 rounded-md border-2" @click="setCurrentTime">CurrentTime</button>
         <button class="p-2 mr-4 rounded-md border-2" @click="createULID">Create</button>
-        <button class="p-2 mr-4 rounded-md border-2" @click="setUlidList">New 10 ULID</button>
+        <button class="p-2 mr-4 rounded-md border-2" @click="setUlidList(10)">New 10 ULID</button>
         <button class="p-2 mr-4 rounded-md border-2" @click="clearUlidList">Clear</button>
       </div>
 
