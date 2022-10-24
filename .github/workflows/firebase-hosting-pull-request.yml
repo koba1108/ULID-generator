@@ -11,6 +11,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: npm install && npm run generate
         env:
+          DEPLOY_VERSION: '${{ github.sha }}'
           FIREBASE_API_KEY: '${{ secrets.FIREBASE_API_KEY }}'
           FIREBASE_AUTH_DOMAIN: '${{ secrets.FIREBASE_AUTH_DOMAIN }}'
           FIREBASE_DATABASE_URL: '${{ secrets.FIREBASE_DATABASE_URL }}'

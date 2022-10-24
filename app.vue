@@ -1,13 +1,15 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 import {useUlidStore, UlidWithTimestamp} from "./composables";
+import {useRuntimeConfig} from "nuxt/app";
 
 const {state, currentUlid, add, clear} = useUlidStore()
-
 const initial = ref<UlidWithTimestamp>(currentUlid())
 const setCurrentUlid = () => {
   initial.value = currentUlid()
 }
+
+const {deployVersion} = useRuntimeConfig()
 </script>
 
 <template>
@@ -85,5 +87,6 @@ const setCurrentUlid = () => {
         </table>
       </div>
     </div>
+    <div>- app ver: {{ deployVersion }} -</div>
   </div>
 </template>
