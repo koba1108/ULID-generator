@@ -2,6 +2,8 @@ import {firebaseConfig} from "./config";
 import {defineNuxtConfig} from 'nuxt/config'
 
 export default defineNuxtConfig({
+  ssr: false,
+  target: 'static',
   app: {
     head: {
       title: 'ULID Generator',
