@@ -1,38 +1,13 @@
 <script lang="ts" setup>
-import {useNuxtApp} from "#app";
-import {ulid} from 'ulid'
-import {Ref, ref} from "vue";
+import {ref} from "vue";
+import {useUlidStore, UlidWithTimestamp} from "~/composable";
 
-const { $dayjs } = useNuxtApp();
-const _ulid: Ref<string> = ref('')
-const _ulidList: Ref<string[]> = ref([])
-const _datetime: Ref<string> = ref('')
+const {state, currentUlid, add, clear} = useUlidStore()
 
-const createULID = () => {
-  _ulidList.value.push(ulid($dayjs(_datetime.value).unix()))
+const initial = ref<UlidWithTimestamp>(currentUlid())
+const setCurrentUlid = () => {
+  initial.value = currentUlid()
 }
-
-const getCurrentUnixTime = () :number => {
-  return $dayjs().unix()
-}
-
-const setCurrentTime = () => {
-  const now = getCurrentUnixTime()
-  _ulid.value = ulid(now)
-  _datetime.value = $dayjs.unix(now).format('YYYY-MM-DD HH:mm:ss')
-}
-
-const setUlidList = (len: number) => {
-  for (let i = 0; i < len; i++) {
-    const now = getCurrentUnixTime()
-    _ulidList.value.push(ulid(now))
-  }
-}
-
-const clearUlidList = () => {
-  _ulidList.value = []
-}
-setCurrentTime()
 </script>
 
 <template>
@@ -40,7 +15,7 @@ setCurrentTime()
     <h1 class="text-6xl">ULID Generator</h1>
     <p class="mt-4">
       Convert between ULID and datetime.<br/>
-      Enter either the ULID or the date and time.
+      <s>Enter either the ULID or the date and time.</s> (coming soon)
     </p>
 
     <div class="flex flex-col justify-center items-center w-full mt-8">
@@ -50,7 +25,7 @@ setCurrentTime()
             class="w-8/12 text-center border-2 border-gray-300 p-2 rounded-md"
             type="text"
             readonly
-            v-model="_ulid"
+            v-model="initial.ulid"
         />
       </div>
       <div class="flex items-center mt-4 w-10/12 text-center">
@@ -58,23 +33,56 @@ setCurrentTime()
         <input
             type="text"
             class="w-8/12 text-center border-2 border-gray-300 p-2 rounded-md"
-            v-model="_datetime"
+            v-model="initial.datetime"
+        />
+      </div>
+      <div class="flex items-center mt-4 w-10/12 text-center">
+        <label class="w-4/12 text-2xl text-gray-700">Unixtime</label>
+        <input
+            type="text"
+            class="w-8/12 text-center border-2 border-gray-300 p-2 rounded-md"
+            v-model="initial.unixtime"
         />
       </div>
       <div class="mt-8 flex flex-row justify-center items-center w-full">
-        <button class="p-2 mr-4 rounded-md border-2" @click="setCurrentTime">CurrentTime</button>
-        <button class="p-2 mr-4 rounded-md border-2" @click="createULID">Create</button>
-        <button class="p-2 mr-4 rounded-md border-2" @click="setUlidList(10)">New 10 ULID</button>
-        <button class="p-2 mr-4 rounded-md border-2" @click="clearUlidList">Clear</button>
+        <button class="p-2 mr-4 rounded-md border-2" @click="setCurrentUlid">CurrentTime</button>
+        <button class="p-2 mr-4 rounded-md border-2" @click="add(1)">Add</button>
+        <button class="p-2 mr-4 rounded-md border-2" @click="add(10)">Add 10 Items</button>
+        <button class="p-2 mr-4 rounded-md border-2" @click="clear">Clear</button>
       </div>
 
-      <div class="m-10 w-10/12 border-2" />
+      <div class="m-10 w-10/12 border-2"/>
 
-      <div class="flex flex-col justify-center items-center w-full">
-        <h3 class="text-4xl">Generated</h3>
-        <ul class="mt-4 overflow-scroll">
-          <li class="p-2 border border-gray-200" v-for="id in _ulidList">{{ id }}</li>
-        </ul>
+      <div v-if="state.ulidList.length > 0" class="flex flex-col justify-center items-center w-8/12">
+        <h3 class="text-4xl mb-4">Generated</h3>
+        <table class="min-w-full">
+          <thead class="border-b">
+          <tr>
+            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+              Ulid
+            </th>
+            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+              Datetime
+            </th>
+            <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+              Unixtime
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="item in state.ulidList" class="border-b transition duration-300 ease-in-out hover:bg-gray-100">
+            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              {{ item.ulid }}
+            </td>
+            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              {{ item.datetime }}
+            </td>
+            <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+              {{ item.unixtime }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
