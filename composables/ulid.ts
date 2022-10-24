@@ -1,4 +1,4 @@
-import {useNuxtApp, useState} from "#app";
+import {useNuxtApp, useState} from "nuxt/app";
 import {readonly} from "@vue/reactivity";
 import {ulid, decodeTime} from 'ulid'
 

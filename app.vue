@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {ref} from "vue";
-import {useUlidStore, UlidWithTimestamp} from "~/composable";
+import {useUlidStore, UlidWithTimestamp} from "./composables";
 
 const {state, currentUlid, add, clear} = useUlidStore()
 
