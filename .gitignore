@@ -107,5 +107,6 @@ node_modules
 *.log*
 .nitro
 .output
-
+.firebase
+.firebaserc
 config/*

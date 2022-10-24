@@ -13,7 +13,6 @@ export default defineNuxtConfig({
     }
   },
   buildModules: ["@nuxtjs/tailwindcss"],
-  css: [],
   runtimeConfig: {
     public: {
       firebaseConfig: {...firebaseConfig}
